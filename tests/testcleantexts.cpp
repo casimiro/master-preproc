@@ -30,3 +30,16 @@ TEST(TestCleanTexts, TestRemoveLaughs)
     std::string cleaned = RemoveLaughs(dirtyString);
     ASSERT_EQ(cleanString, cleaned);
 }
+
+TEST(TestCleanTexts, TestRemoveURLs)
+{
+    std::ifstream file("fixtures/removeURLs.txt");
+    std::string dirtyString;
+    std::string cleanString;
+    
+    std::getline(file, dirtyString);
+    std::getline(file, cleanString);
+    
+    std::string cleaned = RemoveURLs(dirtyString);
+    ASSERT_EQ(cleanString, cleaned);
+}
