@@ -17,3 +17,16 @@ TEST(TestCleanTexts, TestReplaceNonAsciiChars)
     
     ASSERT_EQ(cleanString, cleanedString);
 }
+
+TEST(TestCleanTexts, TestRemoveLaughs)
+{
+    std::ifstream file("fixtures/removeLaughData.txt");
+    std::string dirtyString;
+    std::string cleanString;
+    
+    std::getline(file, dirtyString);
+    std::getline(file, cleanString);
+    
+    std::string cleaned = RemoveLaughs(dirtyString);
+    ASSERT_EQ(cleanString, cleaned);
+}
