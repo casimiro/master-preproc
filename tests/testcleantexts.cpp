@@ -54,3 +54,17 @@ TEST(TestCleanTexts, TestRemoveMentions)
 
     ASSERT_EQ(cleanString, cleaned);
 }
+
+TEST(TestGetWords, TestGetWordsFromText)
+{
+    std::string input;
+    std::string output;
+    LoadStrings("fixtures/getWordsFromText.txt", input, output);
+
+    std::istringstream iss(output);
+    std::vector<std::string> expectedWords{std::istream_iterator<std::string>{iss}, std::istream_iterator<std::string>{}};
+
+    auto words = GetWordsFromText(input);
+
+    ASSERT_EQ(expectedWords, words);
+}
