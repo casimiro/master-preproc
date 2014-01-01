@@ -16,6 +16,7 @@ RegexMatcher* LAUGH_MATCHER = new RegexMatcher("(\\b[hua]+\\b)|(\\b[he]+\\b)|(\\
 RegexMatcher* URL_MATCHER = new RegexMatcher("https?://[\\.\\w/?]*", 0, status);
 RegexMatcher* MENTION_MATCHER = new RegexMatcher("@[\\w]{2,}\\b", 0, status);
 RegexMatcher* WORD_MATCHER = new RegexMatcher("\\b\\p{L}{2,}\\b", 0, status);
+RegexMatcher* STOP_WORDS_MATCHER = new RegexMatcher("(\\b[dt][aeo]\\b)|(\\bvc\\b)|(\\brt\\b)", 0, status);
 
 inline std::string ReplaceNonAsciiChars(const std::string& _dirty)
 {
@@ -52,6 +53,16 @@ inline std::string RemoveMentions(const std::string& _dirty)
     auto uDirty = UnicodeString::fromUTF8(_dirty.c_str());
     MENTION_MATCHER->reset(uDirty);
     auto uCleaned = MENTION_MATCHER->replaceAll("", status);
+    uCleaned.toUTF8String<std::string>(cleaned);
+    return cleaned;
+}
+
+inline std::string RemoveStopWords(const std::string& _dirty)
+{
+    std::string cleaned;
+    auto uDirty = UnicodeString::fromUTF8(_dirty.c_str());
+    STOP_WORDS_MATCHER->reset(uDirty);
+    auto uCleaned = STOP_WORDS_MATCHER->replaceAll("", status);
     uCleaned.toUTF8String<std::string>(cleaned);
     return cleaned;
 }

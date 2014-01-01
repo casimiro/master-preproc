@@ -55,6 +55,17 @@ TEST(TestCleanTexts, TestRemoveMentions)
     ASSERT_EQ(cleanString, cleaned);
 }
 
+TEST(TestCleanTexts, TestRemoveStopWords)
+{
+    std::string dirtyString;
+    std::string cleanString;
+    LoadStrings("fixtures/removeStopWords.txt", dirtyString, cleanString);
+
+    std::string cleaned = RemoveStopWords(dirtyString);
+
+    ASSERT_EQ(cleanString, cleaned);
+}
+
 TEST(TestGetWords, TestGetWordsFromText)
 {
     std::string input;
@@ -68,3 +79,5 @@ TEST(TestGetWords, TestGetWordsFromText)
 
     ASSERT_EQ(expectedWords, words);
 }
+
+
