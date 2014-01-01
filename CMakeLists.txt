@@ -1,4 +1,5 @@
 project(master-preproc)
+cmake_minimum_required(VERSION 2.8.9)
 
 add_definitions(-std=c++11 -std=gnu++11 -pthread -W -Wall -Wno-unused-function)
 

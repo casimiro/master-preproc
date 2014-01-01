@@ -16,9 +16,9 @@ TEST(TestCleanTexts, TestReplaceNonAsciiChars)
     std::string dirtyString;
     std::string cleanString;
     LoadStrings("fixtures/removeNonAsciiData.txt", dirtyString, cleanString);
-    
+
     std::string cleanedString = ReplaceNonAsciiChars(dirtyString);
-    
+
     ASSERT_EQ(cleanString, cleanedString);
 }
 
@@ -27,9 +27,9 @@ TEST(TestCleanTexts, TestRemoveLaughs)
     std::string dirtyString;
     std::string cleanString;
     LoadStrings("fixtures/removeLaughData.txt", dirtyString, cleanString);
-    
+
     std::string cleaned = RemoveLaughs(dirtyString);
-    
+
     ASSERT_EQ(cleanString, cleaned);
 }
 
@@ -38,8 +38,19 @@ TEST(TestCleanTexts, TestRemoveURLs)
     std::string dirtyString;
     std::string cleanString;
     LoadStrings("fixtures/removeURLs.txt", dirtyString, cleanString);
-    
+
     std::string cleaned = RemoveURLs(dirtyString);
-    
+
+    ASSERT_EQ(cleanString, cleaned);
+}
+
+TEST(TestCleanTexts, TestRemoveMentions)
+{
+    std::string dirtyString;
+    std::string cleanString;
+    LoadStrings("fixtures/removeMentions.txt", dirtyString, cleanString);
+
+    std::string cleaned = RemoveMentions(dirtyString);
+
     ASSERT_EQ(cleanString, cleaned);
 }

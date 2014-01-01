@@ -12,6 +12,7 @@ Transliterator* TRANSLITERATOR = Transliterator::createInstance("NFD; [:M:] remo
 
 RegexMatcher* LAUGH_MATCHER = new RegexMatcher("(\\b[hua]+\\b)|(\\b[he]+\\b)|(\\b[rs]+\\b)|(\\b[Kk]+\\b)", 0, status);
 RegexMatcher* URL_MATCHER = new RegexMatcher("https?://[\\.\\w/?]*", 0, status);
+RegexMatcher* MENTION_MATCHER = new RegexMatcher("@[\\w]{2,}\\b", 0, status);
 
 inline std::string ReplaceNonAsciiChars(const std::string& _dirty)
 {
@@ -38,6 +39,16 @@ inline std::string RemoveURLs(const std::string& _dirty)
     auto uDirty = UnicodeString::fromUTF8(_dirty.c_str());
     URL_MATCHER->reset(uDirty);
     auto uCleaned = URL_MATCHER->replaceAll("", status);
+    uCleaned.toUTF8String<std::string>(cleaned);
+    return cleaned;
+}
+
+inline std::string RemoveMentions(const std::string& _dirty)
+{
+    std::string cleaned;
+    auto uDirty = UnicodeString::fromUTF8(_dirty.c_str());
+    MENTION_MATCHER->reset(uDirty);
+    auto uCleaned = MENTION_MATCHER->replaceAll("", status);
     uCleaned.toUTF8String<std::string>(cleaned);
     return cleaned;
 }
