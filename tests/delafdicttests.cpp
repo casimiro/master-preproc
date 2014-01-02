@@ -46,3 +46,16 @@ TEST_F(DelafDictTests, DictLoadedFromFileHasCorrectWordTypes)
     ASSERT_EQ(Acronym, delafDict.getWordType("usp"));
     ASSERT_EQ(UnknownWordType, delafDict.getWordType("pos"));
 }
+
+TEST_F(DelafDictTests, ExtractUnknownWords)
+{
+    auto words = StringVector{
+        std::string("abaetetubense"), std::string("abaetetubenses"), 
+        std::string("artificial"), std::string("piano")
+    };
+    auto expectedUnkwonWords = StringVector{std::string("artificial"), std::string("piano")};
+    
+    auto unknownWords = delafDict.getUnknownWords(words);
+    
+    ASSERT_EQ(expectedUnkwonWords, unknownWords);
+}

@@ -63,4 +63,14 @@ WordType DelafDict::getWordType(const std::string& _word) const
     return it->second.wordType;
 }
 
+StringVector DelafDict::getUnknownWords(const StringVector& _words) const
+{
+    StringVector unknownWords;
+    for(auto word : _words)
+        if(!hasWord(word))
+            unknownWords.push_back(word);
+
+    return unknownWords;
+}
+
 }

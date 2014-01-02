@@ -3,8 +3,11 @@
 
 #include <string>
 #include <map>
+#include <vector>
 
 namespace casimiro {
+
+typedef std::vector<std::string> StringVector;
 
 enum WordType {
     Noun,
@@ -34,6 +37,8 @@ public:
     virtual std::string getCanonical(const std::string& _word) const;
     
     virtual WordType getWordType(const std::string& _word) const;
+    
+    virtual StringVector getUnknownWords(const StringVector& _words) const;
 
 private:
     std::map<std::string, DelafWordInfo> m_words;
