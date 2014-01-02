@@ -15,3 +15,13 @@ TEST(DelafDictTests, DictLoadedFromFileHasWordsWithoutAccents)
 
     ASSERT_FALSE(delafDict.hasWord("inexistente"));
 }
+
+TEST(DelafDictTests, DictLoadedFromFileHasCorrectCanonicalWords)
+{
+    DelafDict delafDict;
+    delafDict.loadFromFile("fixtures/delaf.dict");
+    
+    ASSERT_EQ(std::string("abaetetubense"), delafDict.getCanonical("abaetetubenses"));
+    ASSERT_EQ(std::string("abafadico"), delafDict.getCanonical("abafadicas"));
+    ASSERT_EQ(std::string("abaetetubense"), delafDict.getCanonical("abaetetubense"));
+}

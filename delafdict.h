@@ -2,7 +2,7 @@
 #define DELAFDICT_H
 
 #include <string>
-#include <set>
+#include <map>
 
 namespace casimiro {
 
@@ -13,10 +13,12 @@ public:
 
     virtual void loadFromFile(const std::string& _fileName);
 
-    virtual bool hasWord(const std::string& _word);
+    virtual bool hasWord(const std::string& _word) const;
+    
+    virtual std::string getCanonical(const std::string& _word) const;
 
 private:
-    std::set<std::string> m_words;
+    std::map<std::string, std::string> m_words;
 };
 
 }
