@@ -4,19 +4,20 @@
 #include <string>
 #include <unicode/translit.h>
 #include <unicode/regex.h>
+#include <vector>
 
 namespace casimiro {
 
 typedef std::vector<std::string> StringVector;
 
-UErrorCode status = U_ZERO_ERROR;
-Transliterator* TRANSLITERATOR = Transliterator::createInstance("NFD; [:M:] remove; NFC", UTRANS_FORWARD, status);
+extern UErrorCode status;
+extern Transliterator* TRANSLITERATOR;
 
-RegexMatcher* LAUGH_MATCHER = new RegexMatcher("(\\b[hua]+\\b)|(\\b[he]+\\b)|(\\b[rs]+\\b)|(\\b[Kk]+\\b)", 0, status);
-RegexMatcher* URL_MATCHER = new RegexMatcher("https?://[\\.\\w/?]*", 0, status);
-RegexMatcher* MENTION_MATCHER = new RegexMatcher("@[\\w]{2,}\\b", 0, status);
-RegexMatcher* WORD_MATCHER = new RegexMatcher("\\b\\p{L}{2,}\\b", 0, status);
-RegexMatcher* STOP_WORDS_MATCHER = new RegexMatcher("(\\b[dt][aeo]\\b)|(\\bvc\\b)|(\\brt\\b)", 0, status);
+extern RegexMatcher* LAUGH_MATCHER;
+extern RegexMatcher* URL_MATCHER;
+extern RegexMatcher* MENTION_MATCHER;
+extern RegexMatcher* WORD_MATCHER;
+extern RegexMatcher* STOP_WORDS_MATCHER;
 
 inline std::string ReplaceNonAsciiChars(const std::string& _dirty)
 {
