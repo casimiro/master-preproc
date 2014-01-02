@@ -2,12 +2,21 @@
 #include "../delafdict.h"
 
 using namespace casimiro;
+using namespace ::testing;
 
-TEST(DelafDictTests, DictLoadedFromFileHasWordsWithoutAccents)
-{
+class DelafDictTests : public Test {
+protected:
+    
+    virtual void SetUp()
+    {
+        delafDict.loadFromFile("fixtures/delaf.dict");
+    }
+    
     DelafDict delafDict;
-    delafDict.loadFromFile("fixtures/delaf.dict");
+};
 
+TEST_F(DelafDictTests, DictLoadedFromFileHasWordsWithoutAccents)
+{
     ASSERT_TRUE(delafDict.hasWord("abaetetubenses"));
     ASSERT_TRUE(delafDict.hasWord("abaetetubense"));
     ASSERT_TRUE(delafDict.hasWord("abafadicas"));
@@ -16,30 +25,21 @@ TEST(DelafDictTests, DictLoadedFromFileHasWordsWithoutAccents)
     ASSERT_FALSE(delafDict.hasWord("inexistente"));
 }
 
-TEST(DelafDictTests, DictLoadedFromFileHasWordsInLowerCase)
+TEST_F(DelafDictTests, DictLoadedFromFileHasWordsInLowerCase)
 {
-    DelafDict delafDict;
-    delafDict.loadFromFile("fixtures/delaf.dict");
-    
     ASSERT_TRUE(delafDict.hasWord("usp"));
     ASSERT_FALSE(delafDict.hasWord("USP"));
 }
 
-TEST(DelafDictTests, DictLoadedFromFileHasCorrectCanonicalWords)
+TEST_F(DelafDictTests, DictLoadedFromFileHasCorrectCanonicalWords)
 {
-    DelafDict delafDict;
-    delafDict.loadFromFile("fixtures/delaf.dict");
-    
     ASSERT_EQ(std::string("abaetetubense"), delafDict.getCanonical("abaetetubenses"));
     ASSERT_EQ(std::string("abafadico"), delafDict.getCanonical("abafadicas"));
     ASSERT_EQ(std::string("abaetetubense"), delafDict.getCanonical("abaetetubense"));
 }
 
-TEST(DelafDictTests, DictLoadedFromFileHasCorrectWordTypes)
+TEST_F(DelafDictTests, DictLoadedFromFileHasCorrectWordTypes)
 {
-    DelafDict delafDict;
-    delafDict.loadFromFile("fixtures/delaf.dict");
-    
     ASSERT_EQ(Adjective, delafDict.getWordType("abaetetubenses"));
     ASSERT_EQ(Noun, delafDict.getWordType("carro"));
     ASSERT_EQ(Abbreviation, delafDict.getWordType("ml"));
