@@ -59,3 +59,17 @@ TEST_F(DelafDictTests, ExtractUnknownWords)
     
     ASSERT_EQ(expectedUnkwonWords, unknownWords);
 }
+
+TEST_F(DelafDictTests, GetNouns)
+{
+    auto words = StringVector{
+        std::string("abaetetubense"), std::string("abaetetubenses"), 
+        std::string("artificial"), std::string("piano"),
+        std::string("usp"), std::string("carro"), std::string("ml")
+    };
+    auto expectedNouns = StringVector{std::string("usp"), std::string("carro"), std::string("ml")};
+    
+    auto nouns = delafDict.getNouns(words);
+    
+    ASSERT_EQ(expectedNouns, nouns);
+}

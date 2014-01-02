@@ -73,4 +73,16 @@ StringVector DelafDict::getUnknownWords(const StringVector& _words) const
     return unknownWords;
 }
 
+StringVector DelafDict::getNouns(const StringVector& _words) const
+{
+    StringVector nouns;
+    for(auto word : _words)
+    {
+        auto wordType = getWordType(word);
+        if(wordType == Noun || wordType == Abbreviation || wordType == Acronym)
+            nouns.push_back(word);
+    }
+    return nouns;
+}
+
 }
