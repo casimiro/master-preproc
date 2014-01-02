@@ -6,6 +6,22 @@
 
 namespace casimiro {
 
+enum WordType {
+    Noun,
+    Adjective,
+    Abbreviation,
+    Acronym,
+    UnknownWordType
+};
+
+class DelafWordInfo {
+public:
+    DelafWordInfo(const std::string _canonical, WordType _wordType):canonical(_canonical), wordType(_wordType)
+    {}
+    std::string canonical;
+    WordType wordType;
+};
+
 class DelafDict
 {
 public:
@@ -16,9 +32,13 @@ public:
     virtual bool hasWord(const std::string& _word) const;
     
     virtual std::string getCanonical(const std::string& _word) const;
+    
+    virtual WordType getWordType(const std::string& _word) const;
 
 private:
-    std::map<std::string, std::string> m_words;
+    std::map<std::string, DelafWordInfo> m_words;
+    
+    virtual WordType extractWordType(const std::string& _line);
 };
 
 }
