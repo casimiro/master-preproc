@@ -9,7 +9,9 @@ else()
     add_definitions(-Ofast)
 endif()
 
-add_executable(master-preproc main.cpp)
+add_executable(master-preproc spellchecker.cpp main.cpp)
+
+target_link_libraries(master-preproc aspell)
 
 install(TARGETS master-preproc RUNTIME DESTINATION bin)
 
