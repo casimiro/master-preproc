@@ -78,6 +78,9 @@ StringVector DelafDict::getNouns(const StringVector& _words) const
     StringVector nouns;
     for(auto word : _words)
     {
+        if(!hasWord(word))
+            continue;
+        
         auto wordType = getWordType(word);
         if(wordType == Noun || wordType == Abbreviation || wordType == Acronym)
             nouns.push_back(word);
