@@ -4,7 +4,7 @@ include_directories($ENV{GMOCK_HOME}/include $ENV{GMOCK_HOME}/gtest/include ../ 
 
 link_directories($ENV{GMOCK_HOME}/build $ENV{GMOCK_HOME}/gtest/build)
 
-add_executable(tests main.cpp testcleantexts.cpp delafdicttests.cpp spelltests.cpp ../delafdict.cpp ../utils.cpp ../spellchecker.cpp)
+add_executable(tests main.cpp testcleantexts.cpp delafdicttests.cpp spelltests.cpp tweetscleanertests.cpp ../delafdict.cpp ../utils.cpp ../spellchecker.cpp ../tweetscleaner.cpp)
 
 enable_testing()
 

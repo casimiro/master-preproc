@@ -9,9 +9,9 @@ else()
     add_definitions(-Ofast)
 endif()
 
-add_executable(master-preproc spellchecker.cpp main.cpp)
+add_executable(master-preproc tweetscleaner.cpp spellchecker.cpp main.cpp utils.cpp)
 
-target_link_libraries(master-preproc aspell)
+target_link_libraries(master-preproc aspell icuuc icudata icui18n)
 
 install(TARGETS master-preproc RUNTIME DESTINATION bin)
 
