@@ -22,6 +22,28 @@ TEST(TestCleanTexts, TestReplaceNonAsciiChars)
     ASSERT_EQ(cleanString, cleanedString);
 }
 
+TEST(TestCleanTexts, TestRemoveLineBreakAndTabulations)
+{
+    std::string dirtyString;
+    std::string cleanString;
+    LoadStrings("fixtures/removeLineBreakAndTabulationsData.txt", dirtyString, cleanString);
+
+    std::string cleanedString = RemoveLineBreakAndTabulations(dirtyString);
+
+    ASSERT_EQ(cleanString, cleanedString);
+}
+
+TEST(TestCleanTexts, TestRemoveSmileys)
+{
+    std::string dirtyString;
+    std::string cleanString;
+    LoadStrings("fixtures/removeSmileysData.txt", dirtyString, cleanString);
+
+    std::string cleanedString = RemoveSmileys(dirtyString);
+
+    ASSERT_EQ(cleanString, cleanedString);
+}
+
 TEST(TestCleanTexts, TestRemoveLaughs)
 {
     std::string dirtyString;
