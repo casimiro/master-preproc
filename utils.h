@@ -35,7 +35,7 @@ inline std::string RemoveLineBreakAndTabulations(const std::string& _dirty)
     std::string cleaned;
     auto uDirty = UnicodeString::fromUTF8(_dirty.c_str());
     LINE_BREAK_TAB_MATCHER->reset(uDirty);
-    auto uCleaned = LINE_BREAK_TAB_MATCHER->replaceAll("", status);
+    auto uCleaned = LINE_BREAK_TAB_MATCHER->replaceAll(" ", status);
     uCleaned.toUTF8String<std::string>(cleaned);
     return cleaned;
 }
@@ -94,6 +94,7 @@ inline StringVector GetWordsFromText(const std::string& _text)
 {
     StringVector words;
     auto cleaned = ReplaceNonAsciiChars(_text);
+    cleaned = RemoveSmileys(cleaned);
     cleaned = RemoveLineBreakAndTabulations(cleaned);
     cleaned = RemoveLaughs(cleaned);
     cleaned = RemoveURLs(cleaned);
