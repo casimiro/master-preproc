@@ -54,3 +54,16 @@ TEST(TweetsCleanerTests, ChooseWordsDiscardsWordsInForeignDicts)
     
     ASSERT_EQ(expectedWords, choosenWords);
 }
+
+TEST(TweetsCleanerTests, ChooseWordsReturnsUnknownWords)
+{
+    DelafDict dict;
+    dict.loadFromFile("fixtures/tweetsCleanerDelaf.dict");
+    TweetsCleaner cleaner(dict);
+    
+    auto words = StringVector{std::string("asdfasdf"), std::string("dilma"), std::string("lula")};
+    auto choosenWords = cleaner.chooseWords(words);
+    
+    ASSERT_EQ(words, choosenWords);
+}
+
