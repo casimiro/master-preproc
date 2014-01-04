@@ -99,6 +99,7 @@ inline StringVector GetWordsFromText(const std::string& _text)
     cleaned = RemoveLaughs(cleaned);
     cleaned = RemoveURLs(cleaned);
     cleaned = RemoveMentions(cleaned);
+    cleaned = RemoveStopWords(cleaned);
 
     auto uText = UnicodeString::fromUTF8(cleaned.c_str());
     WORD_MATCHER->reset(uText);
