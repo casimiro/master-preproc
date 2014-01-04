@@ -29,16 +29,10 @@ StringVector splitString(const std::string& _str, char _delim)
 
 bool TweetsCleaner::isForeignWord(const std::string& _word) const
 {
-    bool foreign = false;
     for(auto dict : m_foreignDicts)
-    {
         if(dict.find(_word) != dict.end())
-        {
-            foreign = true;
-            break;
-        }
-    }
-    return foreign;
+            return true;
+    return false;
 }
 
 StringVector TweetsCleaner::chooseWords(const casimiro::StringVector& _words) const
