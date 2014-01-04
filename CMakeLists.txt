@@ -9,10 +9,12 @@ else()
     add_definitions(-Ofast)
 endif()
 
-add_executable(master-preproc tweetscleaner.cpp spellchecker.cpp main.cpp utils.cpp)
+add_executable(master-preproc tweetscleaner.cpp spellchecker.cpp delafdict.cpp main.cpp utils.cpp)
 
 target_link_libraries(master-preproc aspell icuuc icudata icui18n)
 
 install(TARGETS master-preproc RUNTIME DESTINATION bin)
+
+add_custom_command(TARGET master-preproc COMMAND cp -r ${CMAKE_SOURCE_DIR}/data ${CMAKE_BINARY_DIR})
 
 add_subdirectory(tests)
