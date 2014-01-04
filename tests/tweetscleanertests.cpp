@@ -81,13 +81,14 @@ TEST(TweetsCleanerTests, ChooseWordsReturnsUnknownWords)
     ASSERT_EQ(words, choosenWords);
 }
 
-/*
+
 TEST(TweetsCleanerTests, ChooseWordsTryToCorrectUnknownWords)
 {
     DelafDict dict;
     dict.loadFromFile("fixtures/tweetsCleanerDelaf.dict");
     
     SpellChecker speller;
+    speller.prepare();
     
     auto foreignDicts = StringUnorderedSets{};
     
@@ -100,4 +101,3 @@ TEST(TweetsCleanerTests, ChooseWordsTryToCorrectUnknownWords)
     
     ASSERT_EQ(expectedWords, choosenWords);
 }
-*/
