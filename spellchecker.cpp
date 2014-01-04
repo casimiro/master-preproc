@@ -1,9 +1,16 @@
 #include "spellchecker.h"
 #include <iostream>
+#include <stdexcept>
+#include <algorithm>
+#include "utils.h"
 
 namespace casimiro {
 
 SpellChecker::SpellChecker()
+{
+}
+
+void SpellChecker::prepare()
 {
     prepareAspellConfiguration();
     
@@ -16,11 +23,37 @@ SpellChecker::SpellChecker()
 
 SpellChecker::~SpellChecker()
 {
-    delete_aspell_speller(m_speller);
+    if(m_speller != nullptr)
+        delete_aspell_speller(m_speller);
 }
 
-StringVector SpellChecker::getSuggestions(const StringVector& _words) const
+std::string SpellChecker::getSuggestion(const std::string& _word) const
 {
+    if(m_speller == nullptr)
+        throw std::runtime_error("Unprepared speller. Please prepare it before using it by calling prepare()");
+    
+    auto suggested = std::string();
+    
+    const AspellWordList* suggestions = aspell_speller_suggest(m_speller, _word.c_str(), _word.size());
+    AspellStringEnumeration* elements = aspell_word_list_elements(suggestions);
+    
+    const char* suggestion;
+    if((suggestion = aspell_string_enumeration_next(elements)) != nullptr)
+    {
+        suggested = std::string(suggestion);
+        std::transform(suggested.begin(), suggested.begin()+1, suggested.begin(), tolower);
+        suggested = ReplaceNonAsciiChars(suggested);
+    }
+    
+    delete_aspell_string_enumeration(elements);
+    return suggested;
+}
+
+StringVector SpellChecker::getSuggestions(const casimiro::StringVector& _words) const
+{
+    if(m_speller == nullptr)
+        throw std::runtime_error("Unprepared speller. Please prepare it before using it by calling prepare()");
+    
     StringVector suggested;
     for(auto word : _words)
     {

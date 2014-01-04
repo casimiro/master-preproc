@@ -16,12 +16,15 @@ public:
     virtual ~SpellChecker();
     
     virtual StringVector getSuggestions(const StringVector& _words) const;
+    virtual std::string getSuggestion(const std::string& _word) const;
+    
+    virtual void prepare();
     
 private:
-    AspellConfig* s_spellConfig;
-    void prepareAspellConfiguration();
+    AspellConfig* s_spellConfig = nullptr;
+    AspellSpeller* m_speller = nullptr;
     
-    AspellSpeller* m_speller;
+    void prepareAspellConfiguration();
 };
 
 }

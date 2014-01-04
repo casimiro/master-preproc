@@ -5,9 +5,10 @@
 
 namespace casimiro {
 
-TweetsCleaner::TweetsCleaner(const DelafDict& _delafDict, const StringUnorderedSets& _foreignDicts):
+TweetsCleaner::TweetsCleaner(const DelafDict& _delafDict, const StringUnorderedSets& _foreignDicts, const SpellChecker& _speller):
     m_delafDict(_delafDict),
-    m_foreignDicts(_foreignDicts)
+    m_foreignDicts(_foreignDicts),
+    m_speller(_speller)
 {
 }
 
@@ -37,12 +38,24 @@ StringVector TweetsCleaner::chooseWords(const casimiro::StringVector& _words) co
     
     for(auto word : unknownWords)
     {
+        auto foreign = false;
         for(auto dict : m_foreignDicts)
+        {
             if(dict.find(word) != dict.end())
-                goto CONTINUE;
+            {
+                foreign = true;
+                break;
+            }
+        }
         
-        choosen.push_back(word);
-        CONTINUE:;
+        if(!foreign)
+        {
+            auto suggestion = m_speller.getSuggestion(word);
+            if(suggestion.empty())
+                choosen.push_back(word);
+            else
+                choosen.push_back(suggestion);
+        }
     }
     
     return choosen;
