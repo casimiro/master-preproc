@@ -29,7 +29,8 @@ protected:
 
 TEST_F(TweetsCleanerTests, OutputHasOnlyCanonicals)
 {
-    cleaner.cleanTweets("fixtures/tweetsCleanerOutputCanonicalIn.txt", "fixtures/tweetsCleanerOutputCanonicalOut.txt");
+    bool spelling = false;
+    cleaner.cleanTweets("fixtures/tweetsCleanerOutputCanonicalIn.txt", "fixtures/tweetsCleanerOutputCanonicalOut.txt", spelling);
 
     std::ifstream outFile("fixtures/tweetsCleanerOutputCanonicalOut.txt");
     std::string outContent( (std::istreambuf_iterator<char>(outFile) ), (std::istreambuf_iterator<char>()));
@@ -72,21 +73,32 @@ TEST_F(TweetsCleanerTests, ChooseWordsReturnsUnknownWords)
 }
 
 
-TEST_F(TweetsCleanerTests, ChooseWordsTryToCorrectUnknownWords)
+TEST_F(TweetsCleanerTests, ChooseWordsTryToCorrectUnknownWordsWhenItsAskedTo)
 {
     auto words = StringVector{std::string("csa"), std::string("futbol"), std::string("poltica"), std::string("asdfasdf")};
     auto expectedWords = StringVector{std::string("casa"), std::string("futebol"), std::string("politica"), std::string("asdfasdf")};
     
-    auto choosenWords = cleaner.chooseWords(words);
+    bool spelling = true;
+    auto choosenWords = cleaner.chooseWords(words, spelling);
     
     ASSERT_EQ(expectedWords, choosenWords);
 }
 
+TEST_F(TweetsCleanerTests, ChooseWordsDoesNotTryToCorrectUnknownWords)
+{
+    auto words = StringVector{std::string("csa"), std::string("futbol"), std::string("poltica"), std::string("asdfasdf")};
+    
+    auto choosenWords = cleaner.chooseWords(words);
+    
+    ASSERT_EQ(words, choosenWords);
+}
+
 TEST_F(TweetsCleanerTests, cleanTweetsDiscardsTweetsWithLessChoosenWordsThanGivenAcceptable)
 {
+    bool spelling = true;
     int minChoosenWords = 5;
-
-    cleaner.cleanTweets("fixtures/tweetsCleanerDiscardsTweetsWithFewChoosenWordsIn.txt", "fixtures/tweetsCleanerDiscardsTweetsWithFewChoosenWordsOut.txt", minChoosenWords);
+    
+    cleaner.cleanTweets("fixtures/tweetsCleanerDiscardsTweetsWithFewChoosenWordsIn.txt", "fixtures/tweetsCleanerDiscardsTweetsWithFewChoosenWordsOut.txt", spelling, minChoosenWords);
 
     std::ifstream outFile("fixtures/tweetsCleanerDiscardsTweetsWithFewChoosenWordsOut.txt");
     std::string outContent( (std::istreambuf_iterator<char>(outFile) ), (std::istreambuf_iterator<char>()));
@@ -99,10 +111,11 @@ TEST_F(TweetsCleanerTests, cleanTweetsDiscardsTweetsWithLessChoosenWordsThanGive
 
 TEST_F(TweetsCleanerTests, cleanTweetsDiscardsTweetsWithUnknownWordRateAboveGivenAcceptable)
 {
+    bool spelling = true;
     int minChoosenWords = 0;
     double maxUnknownRate = 0.2;
 
-    cleaner.cleanTweets("fixtures/tweetsCleanerDiscardsTweetsWithHighUnknownWordsRateIn.txt", "fixtures/tweetsCleanerDiscardsTweetsWithHighUnknownWordsRateOut.txt", minChoosenWords, maxUnknownRate);
+    cleaner.cleanTweets("fixtures/tweetsCleanerDiscardsTweetsWithHighUnknownWordsRateIn.txt", "fixtures/tweetsCleanerDiscardsTweetsWithHighUnknownWordsRateOut.txt", spelling, minChoosenWords, maxUnknownRate);
 
     std::ifstream outFile("fixtures/tweetsCleanerDiscardsTweetsWithHighUnknownWordsRateOut.txt");
     std::string outContent( (std::istreambuf_iterator<char>(outFile) ), (std::istreambuf_iterator<char>()));

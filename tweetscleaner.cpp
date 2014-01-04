@@ -35,7 +35,7 @@ bool TweetsCleaner::isForeignWord(const std::string& _word) const
     return false;
 }
 
-StringVector TweetsCleaner::chooseWords(const casimiro::StringVector& _words, double* _unknownWordsRateRet) const
+StringVector TweetsCleaner::chooseWords(const casimiro::StringVector& _words, bool _spelling, double* _unknownWordsRateRet) const
 {
     StringVector choosen;
     auto nouns = m_delafDict.getNouns(_words);
@@ -49,11 +49,16 @@ StringVector TweetsCleaner::chooseWords(const casimiro::StringVector& _words, do
     {
         if(!isForeignWord(word))
         {
-            auto suggestion = m_speller.getSuggestion(word);
-            if(suggestion.empty())
+            if(!_spelling)
                 choosen.push_back(word);
             else
-                choosen.push_back(suggestion);
+            {
+                auto suggestion = m_speller.getSuggestion(word);
+                if(suggestion.empty())
+                    choosen.push_back(word);
+                else
+                    choosen.push_back(suggestion);
+            }
         }
     }
     
@@ -73,7 +78,7 @@ void TweetsCleaner::writeOutput(std::ofstream& _output, const StringVector& _fie
     _output << std::endl;
 }
 
-void TweetsCleaner::cleanTweets(const std::string& _inFile, const std::string& _outFile, int _minChoosenWords, double _maxUnknownWordsRate) const
+void TweetsCleaner::cleanTweets(const std::string& _inFile, const std::string& _outFile, bool _spelling, int _minChoosenWords, double _maxUnknownWordsRate) const
 {
     std::ifstream input(_inFile);
     std::ofstream output(_outFile);
@@ -86,7 +91,7 @@ void TweetsCleaner::cleanTweets(const std::string& _inFile, const std::string& _
             continue;
         
         double unknownWordsRate;
-        auto choosen = chooseWords(words, &unknownWordsRate);
+        auto choosen = chooseWords(words, _spelling, &unknownWordsRate);
         
         if(_maxUnknownWordsRate > 0 && unknownWordsRate > _maxUnknownWordsRate)
             continue;
