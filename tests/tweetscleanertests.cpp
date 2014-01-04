@@ -96,3 +96,19 @@ TEST_F(TweetsCleanerTests, cleanTweetsDiscardsTweetsWithLessChoosenWordsThanGive
     
     ASSERT_EQ(expectedContent, outContent);
 }
+
+TEST_F(TweetsCleanerTests, cleanTweetsDiscardsTweetsWithUnknownWordRateAboveGivenAcceptable)
+{
+    int minChoosenWords = 0;
+    double maxUnknownRate = 0.2;
+
+    cleaner.cleanTweets("fixtures/tweetsCleanerDiscardsTweetsWithHighUnknownWordsRateIn.txt", "fixtures/tweetsCleanerDiscardsTweetsWithHighUnknownWordsRateOut.txt", minChoosenWords, maxUnknownRate);
+
+    std::ifstream outFile("fixtures/tweetsCleanerDiscardsTweetsWithHighUnknownWordsRateOut.txt");
+    std::string outContent( (std::istreambuf_iterator<char>(outFile) ), (std::istreambuf_iterator<char>()));
+    
+    std::ifstream expectedFile("fixtures/tweetsCleanerDiscardsTweetsWithHighUnknownWordsRateExpected.txt");
+    std::string expectedContent((std::istreambuf_iterator<char>(expectedFile)), (std::istreambuf_iterator<char>()));
+    
+    ASSERT_EQ(expectedContent, outContent);
+}
