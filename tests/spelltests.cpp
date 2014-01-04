@@ -2,26 +2,30 @@
 #include <vector>
 #include "../spellchecker.h"
 
+using namespace ::testing;
 using namespace casimiro;
 
-TEST(SpellTests, GetSuggestedWords)
-{
+class SpellTests : public Test {
+protected:
+    virtual void SetUp()
+    {
+        spellChecker.prepare();
+    }
     SpellChecker spellChecker;
-    spellChecker.prepare();
+};
+
+TEST_F(SpellTests, GetSuggestedWords)
+{
     StringVector words{std::string("csa"), std::string("futbol"), std::string("poltica"), std::string("asdfasdf")};
     StringVector expectedSuggestions{std::string("casa"), std::string("futebol"), std::string("politica")};
     
     auto suggestions = spellChecker.getSuggestions(words);
     
     ASSERT_EQ(expectedSuggestions, suggestions);
-    
 }
 
-TEST(SpellTests, GetSuggestedWord)
+TEST_F(SpellTests, GetSuggestedWord)
 {
-    SpellChecker spellChecker;
-    spellChecker.prepare();
-    
     std::string word("csa");
     std::string expectedSuggestion("casa");
     
@@ -30,22 +34,16 @@ TEST(SpellTests, GetSuggestedWord)
     ASSERT_EQ(expectedSuggestion, suggestion);
 }
 
-TEST(SpellTests, GetSuggestionForCorrectWord)
+TEST_F(SpellTests, GetSuggestionForCorrectWord)
 {
-    SpellChecker spellChecker;
-    spellChecker.prepare();
-    
     auto word = std::string("lula");
     auto suggestion = spellChecker.getSuggestion(word);
     
     ASSERT_EQ(word, suggestion);
 }
 
-TEST(SpellTests, GetSuggestionIsLowerCase)
+TEST_F(SpellTests, GetSuggestionIsLowerCase)
 {
-    SpellChecker spellChecker;
-    spellChecker.prepare();
-    
     auto word = std::string("dilma");
     auto suggestion = spellChecker.getSuggestion(word);
     
