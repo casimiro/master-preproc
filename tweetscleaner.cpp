@@ -5,8 +5,9 @@
 
 namespace casimiro {
 
-TweetsCleaner::TweetsCleaner(const DelafDict& _delafDict):
-    m_delafDict(_delafDict)
+TweetsCleaner::TweetsCleaner(const DelafDict& _delafDict, const StringUnorderedSets& _foreignDicts):
+    m_delafDict(_delafDict),
+    m_foreignDicts(_foreignDicts)
 {
 }
 
@@ -25,6 +26,38 @@ StringVector splitString(const std::string& _str, char _delim)
     return items;
 }
 
+StringVector TweetsCleaner::chooseWords(const casimiro::StringVector& _words) const
+{
+    StringVector choosen;
+    auto nouns = m_delafDict.getNouns(_words);
+    auto unknownWords = m_delafDict.getUnknownWords(_words);
+    
+    for(auto word : nouns)
+        choosen.push_back(m_delafDict.getCanonical(word));
+    
+    for(auto word : unknownWords)
+    {
+        for(auto dict : m_foreignDicts)
+            if(dict.find(word) != dict.end())
+                goto CONTINUE;
+        
+        choosen.push_back(word);
+        CONTINUE:;
+    }
+    
+    return choosen;
+}
+
+void TweetsCleaner::writeOutput(std::ofstream& _output, const casimiro::StringVector& _fields, const casimiro::StringVector& _words) const
+{
+    // tweetId creation_time userid retweet word1 word2 ... wordN
+    _output << _fields.at(0) << " " << _fields.at(2) << " " << _fields.at(3) << " " << _fields.at(4);
+    
+    for(auto word : _words)
+        _output << " " << word;
+    _output << std::endl;
+}
+
 void TweetsCleaner::cleanTweets(const std::string& _inFile, const std::string& _outFile) const
 {
     std::ifstream input(_inFile);
@@ -37,16 +70,9 @@ void TweetsCleaner::cleanTweets(const std::string& _inFile, const std::string& _
         if(words.size() == 0)
             continue;
         
-        auto nouns = m_delafDict.getNouns(words);
-        auto unknownWords = m_delafDict.getUnknownWords(words);
+        auto choosen = chooseWords(words);
         
-        // tweetId creation_time userid retweet word1 word2 ... wordN
-        output << fields.at(0) << " " << fields.at(2) << " " << fields.at(3) << " " << fields.at(4);
-        for(auto word : nouns)
-            output << " " << m_delafDict.getCanonical(word);
-        for(auto word : unknownWords)
-            output << " " << word;
-        output << std::endl;
+        writeOutput(output, fields, choosen);
     }
 }
 

@@ -1,21 +1,31 @@
 #ifndef TWEETSCLEANER_H
 #define TWEETSCLEANER_H
 
+#include <unordered_set>
 #include <string>
 #include "delafdict.h"
 
 namespace casimiro {
 
+typedef std::unordered_set<std::string> StringUnorderedSet;
+typedef std::vector<StringUnorderedSet> StringUnorderedSets;
+
 class TweetsCleaner
 {
 public:
-    TweetsCleaner(const DelafDict& _delafDict);
+    TweetsCleaner(const DelafDict& _delafDict, const StringUnorderedSets& _foreignDicts = StringUnorderedSets{});
     virtual ~TweetsCleaner();
     
     virtual void cleanTweets(const std::string& _inFile, const std::string& _outFile) const;
     
+    virtual StringVector chooseWords(const StringVector& _words) const;
+    
 private:
     const DelafDict& m_delafDict;
+    
+    const StringUnorderedSets& m_foreignDicts;
+    
+    virtual void writeOutput(std::ofstream& _output, const StringVector& _fields, const StringVector& _words) const;
 };
 
 }
