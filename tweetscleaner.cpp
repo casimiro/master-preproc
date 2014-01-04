@@ -64,7 +64,7 @@ StringVector TweetsCleaner::chooseWords(const casimiro::StringVector& _words) co
     return choosen;
 }
 
-void TweetsCleaner::writeOutput(std::ofstream& _output, const casimiro::StringVector& _fields, const casimiro::StringVector& _words) const
+void TweetsCleaner::writeOutput(std::ofstream& _output, const StringVector& _fields, const StringVector& _words) const
 {
     // tweetId creation_time userid retweet word1 word2 ... wordN
     _output << _fields.at(0) << " " << _fields.at(2) << " " << _fields.at(3) << " " << _fields.at(4);
@@ -74,7 +74,7 @@ void TweetsCleaner::writeOutput(std::ofstream& _output, const casimiro::StringVe
     _output << std::endl;
 }
 
-void TweetsCleaner::cleanTweets(const std::string& _inFile, const std::string& _outFile) const
+void TweetsCleaner::cleanTweets(const std::string& _inFile, const std::string& _outFile, int _minChoosenWords) const
 {
     std::ifstream input(_inFile);
     std::ofstream output(_outFile);
@@ -87,6 +87,9 @@ void TweetsCleaner::cleanTweets(const std::string& _inFile, const std::string& _
             continue;
         
         auto choosen = chooseWords(words);
+        
+        if(_minChoosenWords > 0 && choosen.size() < _minChoosenWords)
+            continue;
         
         writeOutput(output, fields, choosen);
     }

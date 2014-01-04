@@ -17,7 +17,7 @@ public:
     TweetsCleaner(const DelafDict& _delafDict, const StringUnorderedSets& _foreignDicts, const SpellChecker& _speller);
     virtual ~TweetsCleaner();
     
-    virtual void cleanTweets(const std::string& _inFile, const std::string& _outFile) const;
+    virtual void cleanTweets(const std::string& _inFile, const std::string& _outFile, int _minChoosenWords = 0) const;
     
     virtual StringVector chooseWords(const StringVector& _words) const;
     

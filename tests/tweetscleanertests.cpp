@@ -81,3 +81,18 @@ TEST_F(TweetsCleanerTests, ChooseWordsTryToCorrectUnknownWords)
     
     ASSERT_EQ(expectedWords, choosenWords);
 }
+
+TEST_F(TweetsCleanerTests, cleanTweetsDiscardsTweetsWithLessChoosenWordsThanGivenAcceptable)
+{
+    int minChoosenWords = 5;
+
+    cleaner.cleanTweets("fixtures/tweetsCleanerDiscardsTweetsWithFewChoosenWordsIn.txt", "fixtures/tweetsCleanerDiscardsTweetsWithFewChoosenWordsOut.txt", minChoosenWords);
+
+    std::ifstream outFile("fixtures/tweetsCleanerDiscardsTweetsWithFewChoosenWordsOut.txt");
+    std::string outContent( (std::istreambuf_iterator<char>(outFile) ), (std::istreambuf_iterator<char>()));
+    
+    std::ifstream expectedFile("fixtures/tweetsCleanerDiscardsTweetsWithFewChoosenWordsExpected.txt");
+    std::string expectedContent((std::istreambuf_iterator<char>(expectedFile)), (std::istreambuf_iterator<char>()));
+    
+    ASSERT_EQ(expectedContent, outContent);
+}
