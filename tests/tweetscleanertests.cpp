@@ -4,17 +4,31 @@
 #include "../delafdict.h"
 #include "../spellchecker.h"
 
+using namespace ::testing;
 using namespace casimiro;
 
-TEST(TweetsCleanerTests, OutputHasOnlyCanonicals)
-{
+class TweetsCleanerTests : public Test {
+protected:
+    
+    TweetsCleanerTests():
+        cleaner(dict, foreignDicts, speller)
+    {
+    }
+    
+    virtual void SetUp()
+    {
+        dict.loadFromFile("fixtures/tweetsCleanerDelaf.dict");
+        speller.prepare();
+    }
+    
+    StringUnorderedSets foreignDicts;
     DelafDict dict;
     SpellChecker speller;
-    auto foreignDicts = StringUnorderedSets{};
-    dict.loadFromFile("fixtures/tweetsCleanerDelaf.dict");
-    speller.prepare();
-    
-    TweetsCleaner cleaner(dict, foreignDicts, speller);
+    TweetsCleaner cleaner;
+};
+
+TEST_F(TweetsCleanerTests, OutputHasOnlyCanonicals)
+{
     cleaner.cleanTweets("fixtures/tweetsCleanerOutputCanonicalIn.txt", "fixtures/tweetsCleanerOutputCanonicalOut.txt");
 
     std::ifstream outFile("fixtures/tweetsCleanerOutputCanonicalOut.txt");
@@ -26,16 +40,8 @@ TEST(TweetsCleanerTests, OutputHasOnlyCanonicals)
     ASSERT_EQ(expectedContent, outContent);
 }
 
-TEST(TweetsCleanerTests, ChooseWordsShouldReturnCanonicalFormOfTheWords)
+TEST_F(TweetsCleanerTests, ChooseWordsShouldReturnCanonicalFormOfTheWords)
 {
-    DelafDict dict;
-    SpellChecker speller;
-    auto foreignDicts = StringUnorderedSets{};
-    dict.loadFromFile("fixtures/tweetsCleanerDelaf.dict");
-    speller.prepare();
-    
-    TweetsCleaner cleaner(dict, foreignDicts, speller);
-    
     auto words = StringVector{"coisinhas", "basta"};
     auto expectedWords = StringVector{"coisa", "basto"};
 
@@ -44,18 +50,10 @@ TEST(TweetsCleanerTests, ChooseWordsShouldReturnCanonicalFormOfTheWords)
     ASSERT_EQ(expectedWords, choosenWords);
 }
 
-TEST(TweetsCleanerTests, ChooseWordsDiscardsWordsInForeignDicts)
+TEST_F(TweetsCleanerTests, ChooseWordsDiscardsWordsInForeignDicts)
 {
-    auto englishDict = StringUnorderedSet{std::string("you"), std::string("home"), std::string("fato")};
-    auto spanishDict = StringUnorderedSet{std::string("madre"), std::string("nino"), std::string("sentido")};
-    
-    auto foreignDicts = StringUnorderedSets{englishDict, spanishDict};
-    SpellChecker speller;
-    DelafDict dict;
-    dict.loadFromFile("fixtures/tweetsCleanerDelaf.dict");
-    speller.prepare();
-    
-    TweetsCleaner cleaner(dict, foreignDicts, speller);
+    foreignDicts.push_back(StringUnorderedSet{std::string("you"), std::string("home"), std::string("fato")});
+    foreignDicts.push_back(StringUnorderedSet{std::string("madre"), std::string("nino"), std::string("sentido")});
     
     auto words = StringVector{std::string("you"), std::string("home"), std::string("fato"), std::string("madre"), std::string("nino"), std::string("sentido"), std::string("wireless")};
     auto expectedWords = StringVector{std::string("fato"), std::string("sentido"), std::string("wireless")};
@@ -65,16 +63,8 @@ TEST(TweetsCleanerTests, ChooseWordsDiscardsWordsInForeignDicts)
     ASSERT_EQ(expectedWords, choosenWords);
 }
 
-TEST(TweetsCleanerTests, ChooseWordsReturnsUnknownWords)
+TEST_F(TweetsCleanerTests, ChooseWordsReturnsUnknownWords)
 {
-    DelafDict dict;
-    SpellChecker speller;
-    auto foreignDicts = StringUnorderedSets{};
-    dict.loadFromFile("fixtures/tweetsCleanerDelaf.dict");
-    speller.prepare();
-    
-    TweetsCleaner cleaner(dict, foreignDicts, speller);
-    
     auto words = StringVector{std::string("asdfasdf"), std::string("dilma"), std::string("lula")};
     auto choosenWords = cleaner.chooseWords(words);
     
@@ -82,18 +72,8 @@ TEST(TweetsCleanerTests, ChooseWordsReturnsUnknownWords)
 }
 
 
-TEST(TweetsCleanerTests, ChooseWordsTryToCorrectUnknownWords)
+TEST_F(TweetsCleanerTests, ChooseWordsTryToCorrectUnknownWords)
 {
-    DelafDict dict;
-    dict.loadFromFile("fixtures/tweetsCleanerDelaf.dict");
-    
-    SpellChecker speller;
-    speller.prepare();
-    
-    auto foreignDicts = StringUnorderedSets{};
-    
-    TweetsCleaner cleaner(dict, foreignDicts, speller);
-    
     auto words = StringVector{std::string("csa"), std::string("futbol"), std::string("poltica"), std::string("asdfasdf")};
     auto expectedWords = StringVector{std::string("casa"), std::string("futebol"), std::string("politica"), std::string("asdfasdf")};
     
