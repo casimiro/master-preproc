@@ -27,6 +27,20 @@ StringVector splitString(const std::string& _str, char _delim)
     return items;
 }
 
+bool TweetsCleaner::isForeignWord(const std::string& _word) const
+{
+    bool foreign = false;
+    for(auto dict : m_foreignDicts)
+    {
+        if(dict.find(_word) != dict.end())
+        {
+            foreign = true;
+            break;
+        }
+    }
+    return foreign;
+}
+
 StringVector TweetsCleaner::chooseWords(const casimiro::StringVector& _words) const
 {
     StringVector choosen;
@@ -38,17 +52,7 @@ StringVector TweetsCleaner::chooseWords(const casimiro::StringVector& _words) co
     
     for(auto word : unknownWords)
     {
-        auto foreign = false;
-        for(auto dict : m_foreignDicts)
-        {
-            if(dict.find(word) != dict.end())
-            {
-                foreign = true;
-                break;
-            }
-        }
-        
-        if(!foreign)
+        if(!isForeignWord(word))
         {
             auto suggestion = m_speller.getSuggestion(word);
             if(suggestion.empty())
@@ -57,7 +61,6 @@ StringVector TweetsCleaner::chooseWords(const casimiro::StringVector& _words) co
                 choosen.push_back(suggestion);
         }
     }
-    
     return choosen;
 }
 

@@ -26,6 +26,7 @@ private:
     const StringUnorderedSets& m_foreignDicts;
     const SpellChecker& m_speller;
     
+    virtual bool isForeignWord(const std::string& _word) const;
     
     virtual void writeOutput(std::ofstream& _output, const StringVector& _fields, const StringVector& _words) const;
 };
