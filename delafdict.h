@@ -2,7 +2,7 @@
 #define DELAFDICT_H
 
 #include <string>
-#include <map>
+#include <unordered_map>
 #include <vector>
 
 namespace casimiro {
@@ -43,7 +43,7 @@ public:
     virtual StringVector getNouns(const StringVector& _words) const;
 
 private:
-    std::map<std::string, DelafWordInfo> m_words;
+    std::unordered_map<std::string, DelafWordInfo> m_words;
     
     virtual WordType extractWordType(const std::string& _line);
 };

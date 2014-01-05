@@ -16,7 +16,7 @@ WordType DelafDict::extractWordType(const std::string& _line)
     auto colonPos = _line.find_first_of(":");
     auto type = _line.substr(periodPos+1, (colonPos-periodPos-1));
     
-    if(type == std::string("N"))
+    if(type == std::string("N") || type == std::string("N+Pr"))
         return Noun;
     else if(type == std::string("A"))
         return Adjective;
@@ -42,6 +42,10 @@ void DelafDict::loadFromFile(const std::string &_fileName)
         std::transform(word.begin(), word.end(), word.begin(), ::tolower);
         std::transform(canonical.begin(), canonical.end(), canonical.begin(), ::tolower);
         
+        auto it = m_words.find(word);
+        if(it != m_words.end())
+            if(it->second.wordType != Noun)
+                m_words.erase(it);
         m_words.insert(std::make_pair(word, DelafWordInfo(canonical, extractWordType(line))));
     }
 }

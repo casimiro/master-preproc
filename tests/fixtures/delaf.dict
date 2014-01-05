@@ -6,4 +6,8 @@ carro,carro.N:ms
 ml,ml.ABREV:ms
 USP,USP.SIGL
 pós,pós.PFX
-
+Ubatuba,Ubatuba.N+Pr:ms:mp:fs:f
+manejo,manejo.N:ms
+manejo,manejar.V:P1s
+trato,tratar.V:P1s
+trato,trato.N:ms

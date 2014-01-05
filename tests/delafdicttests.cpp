@@ -73,3 +73,30 @@ TEST_F(DelafDictTests, GetNouns)
     
     ASSERT_EQ(expectedNouns, nouns);
 }
+
+TEST_F(DelafDictTests, GetNounsReturnsForenames)
+{
+    auto words = StringVector{
+        std::string("abaetetubense"), std::string("abaetetubenses"), 
+        std::string("artificial"), std::string("piano"), std::string("ubatuba")
+    };
+    auto expectedNouns = StringVector{std::string("ubatuba")};
+    
+    auto nouns = delafDict.getNouns(words);
+    
+    ASSERT_EQ(expectedNouns, nouns);
+}
+
+TEST_F(DelafDictTests, GetNounsReturnsVerbsThatCanBeNouns)
+{
+    auto words = StringVector{
+        std::string("abaetetubense"), std::string("abaetetubenses"), 
+        std::string("artificial"), std::string("piano"), std::string("manejo"),
+        std::string("trato")
+    };
+    auto expectedNouns = StringVector{std::string("manejo"), std::string("trato")};
+    
+    auto nouns = delafDict.getNouns(words);
+    
+    ASSERT_EQ(expectedNouns, nouns);
+}
