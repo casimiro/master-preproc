@@ -92,4 +92,11 @@ StringVector DelafDict::getNouns(const StringVector& _words) const
     return nouns;
 }
 
+bool DelafDict::isNoun(const std::string& _word) const
+{
+    if(hasWord(_word) && m_words.find(_word)->second.wordType == Noun)
+        return true;
+    return false;
+}
+
 }

@@ -100,3 +100,14 @@ TEST_F(DelafDictTests, GetNounsReturnsVerbsThatCanBeNouns)
     
     ASSERT_EQ(expectedNouns, nouns);
 }
+
+TEST_F(DelafDictTests, isNounReturnsTrueOnNounsAndFalseOtherwise)
+{
+    auto noun = std::string("carro");
+    auto notNoun = std::string("abaetetubense");
+    auto unknownWord = std::string("asdfasdf");
+    
+    ASSERT_TRUE(delafDict.isNoun(noun));
+    ASSERT_FALSE(delafDict.isNoun(notNoun));
+    ASSERT_FALSE(delafDict.isNoun(unknownWord));
+}

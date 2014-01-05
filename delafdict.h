@@ -41,6 +41,8 @@ public:
     virtual StringVector getUnknownWords(const StringVector& _words) const;
     
     virtual StringVector getNouns(const StringVector& _words) const;
+    
+    virtual bool isNoun(const std::string& _word) const;
 
 private:
     std::unordered_map<std::string, DelafWordInfo> m_words;
