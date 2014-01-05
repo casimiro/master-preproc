@@ -68,7 +68,7 @@ StringVector TweetsCleaner::chooseWords(const casimiro::StringVector& _words, bo
     return choosen;
 }
 
-void TweetsCleaner::writeOutput(std::ofstream& _output, const StringVector& _fields, const StringVector& _words) const
+void writeOutput(std::ofstream& _output, const StringVector& _fields, const StringVector& _words)
 {
     // tweetId creation_time userid retweet word1 word2 ... wordN
     _output << _fields.at(0) << " " << _fields.at(2) << " " << _fields.at(3) << " " << _fields.at(4);
@@ -76,6 +76,58 @@ void TweetsCleaner::writeOutput(std::ofstream& _output, const StringVector& _fie
     for(auto word : _words)
         _output << " " << word;
     _output << std::endl;
+}
+
+void writeOnlyWordsToOutput(std::ofstream& _output, const StringVector& _words)
+{
+    std::stringstream ss;
+    for(auto word : _words)
+        ss << word << " ";
+    
+    auto content = ss.str();
+    _output << content.substr(0, content.size()-1) << std::endl;
+    
+}
+
+void TweetsCleaner::cleanTweetsGroupingByUser(const std::string& _inFile, const std::string& _outFile, bool _spelling, int _minChoosenWords, double _maxUnknownWordsRate)
+{
+    std::string currentUser;
+    auto currentUserWords = StringVector{};
+    int currentUserTweets = 0;
+    double currentUserUnknownWordsRate = 0;
+    
+    std::ifstream input(_inFile);
+    std::ofstream output(_outFile);
+    std::string line;
+    while(std::getline(input, line))
+    {
+        StringVector fields = splitString(line, '\t');
+        auto words = GetWordsFromText(fields.at(1));
+        double unknownWordsRate;
+        auto choosen = chooseWords(words, _spelling, &unknownWordsRate);
+        
+        if(!currentUser.empty() && currentUser != fields[3])
+        {
+            currentUserUnknownWordsRate /= currentUserTweets;
+            if((_maxUnknownWordsRate == 0 || currentUserUnknownWordsRate < _maxUnknownWordsRate) 
+                && (_minChoosenWords == 0 || currentUserWords.size() > _minChoosenWords))
+                writeOnlyWordsToOutput(output, currentUserWords);
+            
+            currentUserTweets = 0;
+            currentUserUnknownWordsRate = 0;
+            currentUserWords.clear();
+        }
+        currentUserTweets++;
+        currentUserUnknownWordsRate += unknownWordsRate;
+        currentUser = fields[3];
+        
+        for(auto word : choosen)
+            currentUserWords.push_back(word);
+    }
+    currentUserUnknownWordsRate /= currentUserTweets;
+    if((_maxUnknownWordsRate == 0 || currentUserUnknownWordsRate < _maxUnknownWordsRate) 
+                && (_minChoosenWords == 0 || currentUserWords.size() > _minChoosenWords))
+        writeOnlyWordsToOutput(output, currentUserWords);
 }
 
 void TweetsCleaner::cleanTweets(const std::string& _inFile, const std::string& _outFile, bool _spelling, int _minChoosenWords, double _maxUnknownWordsRate) const

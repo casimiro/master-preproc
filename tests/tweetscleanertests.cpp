@@ -125,3 +125,52 @@ TEST_F(TweetsCleanerTests, cleanTweetsDiscardsTweetsWithUnknownWordRateAboveGive
     
     ASSERT_EQ(expectedContent, outContent);
 }
+
+TEST_F(TweetsCleanerTests, cleanTweetsGroupingByUser)
+{
+    bool spelling = true;
+    int minChoosenWords = 0;
+    double maxUnknownRate = 0;
+
+    cleaner.cleanTweetsGroupingByUser("fixtures/tweetsCleanerGroupsTweetsIn.txt", "fixtures/tweetsCleanerGroupsTweetsOut.txt", spelling, minChoosenWords, maxUnknownRate);
+
+    std::ifstream outFile("fixtures/tweetsCleanerGroupsTweetsOut.txt");
+    std::string outContent( (std::istreambuf_iterator<char>(outFile) ), (std::istreambuf_iterator<char>()));
+    
+    std::ifstream expectedFile("fixtures/tweetsCleanerGroupsTweetsExpected.txt");
+    std::string expectedContent((std::istreambuf_iterator<char>(expectedFile)), (std::istreambuf_iterator<char>()));
+    
+    ASSERT_EQ(expectedContent, outContent);
+}
+
+TEST_F(TweetsCleanerTests, cleanTweetsGroupingByUserFilterUsersWithHighUnknownWordsRate)
+{
+    bool spelling = true;
+    int minChoosenWords = 0;
+    double maxUnknownRate = 0.5;
+
+    cleaner.cleanTweetsGroupingByUser("fixtures/tweetsCleanerGroupsTweetsIn.txt", "fixtures/tweetsCleanerFiltersUsersWithHighUnknownWordsRateOut.txt", spelling, minChoosenWords, maxUnknownRate);
+
+    std::ifstream outFile("fixtures/tweetsCleanerFiltersUsersWithHighUnknownWordsRateOut.txt");
+    std::string outContent( (std::istreambuf_iterator<char>(outFile) ), (std::istreambuf_iterator<char>()));
+    
+    std::string expectedContent("");
+    
+    ASSERT_EQ(expectedContent, outContent);
+}
+
+TEST_F(TweetsCleanerTests, cleanTweetsGroupingByUserFilterUsersWithFewTweets)
+{
+    bool spelling = true;
+    int minChoosenWords = 40;
+    double maxUnknownRate = 0.0;
+
+    cleaner.cleanTweetsGroupingByUser("fixtures/tweetsCleanerGroupsTweetsIn.txt", "fixtures/tweetsCleanerFiltersUsersWithHighUnknownWordsRateOut.txt", spelling, minChoosenWords, maxUnknownRate);
+
+    std::ifstream outFile("fixtures/tweetsCleanerFiltersUsersWithHighUnknownWordsRateOut.txt");
+    std::string outContent( (std::istreambuf_iterator<char>(outFile) ), (std::istreambuf_iterator<char>()));
+    
+    std::string expectedContent("");
+    
+    ASSERT_EQ(expectedContent, outContent);
+}
