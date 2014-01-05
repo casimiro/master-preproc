@@ -5,6 +5,7 @@
 #include <unicode/translit.h>
 #include <unicode/regex.h>
 #include <vector>
+#include <algorithm>
 
 namespace casimiro {
 
@@ -94,6 +95,7 @@ inline StringVector GetWordsFromText(const std::string& _text)
 {
     StringVector words;
     auto cleaned = ReplaceNonAsciiChars(_text);
+    std::transform(cleaned.begin(), cleaned.end(), cleaned.begin(), tolower);
     cleaned = RemoveSmileys(cleaned);
     cleaned = RemoveLineBreakAndTabulations(cleaned);
     cleaned = RemoveLaughs(cleaned);
@@ -107,11 +109,9 @@ inline StringVector GetWordsFromText(const std::string& _text)
     {
         std::string aux;
         auto group = WORD_MATCHER->group(status);
-        group.toLower();
         group.toUTF8String<std::string>(aux);
         words.push_back(aux);
     }
-
     return words;
 }
 
